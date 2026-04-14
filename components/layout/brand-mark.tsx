@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
@@ -17,9 +18,13 @@ export function BrandMark({
         className
       )}
     >
-      <span className="inline-flex size-10 items-center justify-center rounded-sm border-[3px] border-border bg-primary font-heading text-lg font-black uppercase text-primary-foreground">
-        C
-      </span>
+      <Image 
+        src="/logo.svg" 
+        alt="Compeat Logo" 
+        width={36} 
+        height={36} 
+        className="shrink-0"
+      />
       {!compact ? (
         <span className="flex flex-col leading-none">
           <span className="font-heading text-lg font-black uppercase tracking-tight">
