@@ -26,7 +26,7 @@ export function BrandMark({
         className="shrink-0"
       />
       {!compact ? (
-        <span className="flex flex-col leading-none">
+        <span className="hidden flex-col leading-none sm:flex">
           <span className="font-heading text-lg font-black uppercase tracking-tight">
             Compeat
           </span>
