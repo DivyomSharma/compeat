@@ -119,7 +119,7 @@ export function CreateEventDialog({ clubs }: { clubs: Club[] }) {
           Create event
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="w-11/12 max-w-5xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create an event</DialogTitle>
           <DialogDescription>
@@ -128,8 +128,8 @@ export function CreateEventDialog({ clubs }: { clubs: Club[] }) {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2 md:col-span-2">
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="space-y-2 md:col-span-3">
               <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
                 Title
               </label>
@@ -138,6 +138,7 @@ export function CreateEventDialog({ clubs }: { clubs: Club[] }) {
                 {...form.register("title")}
               />
             </div>
+
             <div className="space-y-2">
               <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
                 Category
@@ -157,48 +158,12 @@ export function CreateEventDialog({ clubs }: { clubs: Club[] }) {
                 </SelectTrigger>
                 <SelectContent>
                   {clubs.map((club) => (
-                    <SelectItem key={club.id} value={club.id}>
+                     <SelectItem key={club.id} value={club.id}>
                       {club.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            <div className="space-y-2">
-              <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Venue
-              </label>
-              <Input placeholder="Innovation Hall" {...form.register("venue")} />
-            </div>
-            <div className="space-y-2">
-              <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                City
-              </label>
-              <Input placeholder="Bengaluru" {...form.register("city")} />
-            </div>
-            <div className="space-y-2">
-              <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Registration deadline
-              </label>
-              <Input type="datetime-local" {...form.register("registrationDeadline")} />
-            </div>
-            <div className="space-y-2">
-              <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Starts at
-              </label>
-              <Input type="datetime-local" {...form.register("startsAt")} />
-            </div>
-            <div className="space-y-2">
-              <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Ends at
-              </label>
-              <Input type="datetime-local" {...form.register("endsAt")} />
-            </div>
-            <div className="space-y-2">
-              <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Capacity
-              </label>
-              <Input type="number" placeholder="200" {...form.register("capacity")} />
             </div>
             <div className="space-y-2">
               <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
@@ -220,19 +185,59 @@ export function CreateEventDialog({ clubs }: { clubs: Club[] }) {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2 md:col-span-2">
+
+            <div className="space-y-2">
+              <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                Venue
+              </label>
+              <Input placeholder="Innovation Hall" {...form.register("venue")} />
+            </div>
+            <div className="space-y-2">
+              <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                City
+              </label>
+              <Input placeholder="Bengaluru" {...form.register("city")} />
+            </div>
+            <div className="space-y-2">
+              <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                Capacity
+              </label>
+              <Input type="number" placeholder="200" {...form.register("capacity")} />
+            </div>
+
+            <div className="space-y-2">
+              <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                Registration deadline
+              </label>
+              <Input type="datetime-local" {...form.register("registrationDeadline")} />
+            </div>
+            <div className="space-y-2">
+              <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                Starts at
+              </label>
+              <Input type="datetime-local" {...form.register("startsAt")} />
+            </div>
+            <div className="space-y-2">
+              <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                Ends at
+              </label>
+              <Input type="datetime-local" {...form.register("endsAt")} />
+            </div>
+
+            <div className="space-y-2 md:col-span-3">
               <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
                 Poster
               </label>
               <Input type="file" name="poster" accept="image/*" />
             </div>
-            <div className="space-y-2 md:col-span-2">
+            <div className="space-y-2 md:col-span-3">
               <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
                 Description
               </label>
               <Textarea
                 placeholder="Outline the format, who should apply, and what students can expect."
                 {...form.register("description")}
+                className="resize-none h-20"
               />
             </div>
           </div>
