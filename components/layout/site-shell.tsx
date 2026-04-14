@@ -59,11 +59,11 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
             className={cn(
               "flex items-center gap-3 rounded-sm border-[3px] border-border px-4 py-3 font-heading text-sm font-black uppercase tracking-tight transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5",
               isActive
-                ? "bg-primary text-primary-foreground shadow-[5px_5px_0_0_var(--border)]"
-                : "bg-card text-card-foreground shadow-[5px_5px_0_0_var(--border)]"
+                ? "bg-primary text-primary-foreground shadow-[4px_4px_0_0_var(--border)]"
+                : "bg-card text-card-foreground shadow-[4px_4px_0_0_var(--border)]"
             )}
           >
-            <Icon className="size-4" />
+            <Icon className="size-4 shrink-0" />
             {label}
           </Link>
         );
@@ -82,10 +82,12 @@ export function SiteShell({
   const { mobileNavOpen, setMobileNavOpen } = useAppShellStore();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
+      {/* ── Header ── */}
       <header className="sticky top-0 z-40 border-b-[3px] border-border bg-background/95 px-4 py-4 backdrop-blur md:px-6">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            {/* Mobile hamburger */}
             <div className="md:hidden">
               <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
                 <SheetTrigger asChild>
@@ -108,10 +110,10 @@ export function SiteShell({
                   <div className="space-y-6 p-5">
                     <NavLinks onNavigate={() => setMobileNavOpen(false)} />
                     <div className="neo-panel p-4">
-                      <div className="font-heading text-lg font-black uppercase">
+                      <div className="truncate font-heading text-lg font-black uppercase">
                         {userName}
                       </div>
-                      <div className="mt-1 text-sm text-muted-foreground">
+                      <div className="mt-1 truncate text-sm text-muted-foreground">
                         {schoolName}
                       </div>
                     </div>
@@ -121,11 +123,15 @@ export function SiteShell({
             </div>
             <BrandMark />
           </div>
-          <div className="hidden items-center gap-2 md:flex">
-            <div className="neo-panel px-4 py-2">
-              <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em]">
-                <ShieldCheck className="size-3.5" />
-                {roleLabel}
+
+          {/* Desktop right slot */}
+          <div className="flex shrink-0 items-center gap-2">
+            <div className="hidden md:block">
+              <div className="neo-panel px-4 py-2">
+                <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em]">
+                  <ShieldCheck className="size-3.5 shrink-0" />
+                  <span className="max-w-[180px] truncate">{roleLabel}</span>
+                </div>
               </div>
             </div>
             <ThemeToggle />
@@ -134,26 +140,30 @@ export function SiteShell({
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 md:grid-cols-[280px_1fr] md:px-6">
+      {/* ── Body grid ── */}
+      <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 md:grid-cols-[260px_1fr] md:px-6">
+        {/* Sidebar */}
         <aside className="hidden space-y-4 md:block">
-          <div className="neo-card p-5">
+          <div className="neo-card overflow-hidden p-5">
             <div className="inline-flex items-center gap-2 rounded-sm border-[3px] border-border bg-accent px-3 py-1 font-mono text-[11px] uppercase tracking-[0.2em] text-accent-foreground">
               Campus shell
             </div>
-            <div className="mt-4">
-              <div className="font-heading text-2xl font-black uppercase tracking-tight">
+            <div className="mt-4 min-w-0">
+              <div className="truncate font-heading text-xl font-black uppercase tracking-tight">
                 {userName}
               </div>
-              <div className="mt-2 text-sm text-muted-foreground">{schoolName}</div>
+              <div className="mt-2 truncate text-sm text-muted-foreground">{schoolName}</div>
             </div>
           </div>
           <NavLinks />
         </aside>
 
-        <main className="space-y-6">
+        {/* Main content — min-w-0 prevents grid blowout */}
+        <main className="min-w-0 space-y-6">
+          {/* Mobile school bar */}
           <div className="flex items-center justify-between gap-3 md:hidden">
-            <div className="neo-panel flex-1 px-4 py-3">
-              <div className="font-heading text-lg font-black uppercase">
+            <div className="neo-panel min-w-0 flex-1 px-4 py-3">
+              <div className="truncate font-heading text-lg font-black uppercase">
                 {schoolName}
               </div>
               <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
