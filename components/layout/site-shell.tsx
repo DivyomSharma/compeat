@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   CalendarDays,
   LayoutDashboard,
@@ -42,14 +42,21 @@ type SiteShellProps = {
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const scope = searchParams.get("scope");
 
   return (
     <nav className="flex flex-col gap-2">
       {navItems.map(({ href, label, icon: Icon }) => {
-        const isActive =
-          href === "/events?scope=network"
-            ? pathname === "/events"
-            : pathname === href || pathname.startsWith(`${href}/`);
+        let isActive = false;
+
+        if (href === "/events?scope=network") {
+          isActive = pathname === "/events" && scope === "network";
+        } else if (href === "/events") {
+          isActive = (pathname === "/events" && scope !== "network") || pathname.startsWith("/events/");
+        } else {
+          isActive = pathname === href || pathname.startsWith(`${href}/`);
+        }
 
         return (
           <Link
