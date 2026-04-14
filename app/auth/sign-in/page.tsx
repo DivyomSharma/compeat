@@ -2,7 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import { BrandMark } from "@/components/layout/brand-mark";
-import { RequestOtpForm } from "@/features/auth/components/request-otp-form";
+import { MagicLinkForm } from "@/features/auth/components/magic-link-form";
 
 export default async function SignInPage({
   searchParams,
@@ -29,11 +29,11 @@ export default async function SignInPage({
           <section className="neo-card p-6 md:p-8">
             <div className="neo-kicker">Student + organizer auth</div>
             <h1 className="mt-5 font-heading text-4xl font-black uppercase">
-              Sign in with email OTP
+              Sign in with a magic link
             </h1>
             <p className="mt-4 max-w-xl text-muted-foreground">
-              No password fatigue. Enter your campus email, receive a one-time
-              code, and continue into your institution workspace.
+              No passwords. Enter your campus email and we&apos;ll send a secure
+              one-click link straight to your inbox.
             </p>
           </section>
 
@@ -42,10 +42,10 @@ export default async function SignInPage({
               Continue to Compeat
             </h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              We&apos;ll send a one-time password to your inbox.
+              We&apos;ll email you a link — no code to copy.
             </p>
             <div className="mt-6">
-              <RequestOtpForm next={next} />
+              <MagicLinkForm next={next} />
             </div>
           </section>
         </div>

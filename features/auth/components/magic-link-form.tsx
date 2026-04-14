@@ -10,7 +10,7 @@ import { FormMessage } from "@/components/shared/form-message";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { initialActionState } from "@/lib/action-state";
-import { requestOtpAction } from "@/features/auth/actions";
+import { sendMagicLinkAction } from "@/features/auth/actions";
 
 const formSchema = z.object({
   email: z.string().email("Enter a valid institutional email address."),
@@ -18,24 +18,18 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function RequestOtpForm({ next }: { next?: string }) {
-  const [state, formAction] = useActionState(requestOtpAction, initialActionState);
+export function MagicLinkForm({ next }: { next?: string }) {
+  const [state, formAction] = useActionState(sendMagicLinkAction, initialActionState);
   const [isPending, startTransition] = useTransition();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-    },
+    defaultValues: { email: "" },
   });
 
   const onSubmit = form.handleSubmit((values) => {
     const data = new FormData();
     data.set("email", values.email);
-
-    if (next) {
-      data.set("next", next);
-    }
-
+    if (next) data.set("next", next);
     startTransition(() => formAction(data));
   });
 
@@ -69,8 +63,8 @@ export function RequestOtpForm({ next }: { next?: string }) {
       <FormMessage message={state.message} success={state.success} />
 
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? <LoaderCircle className="animate-spin" /> : null}
-        Send OTP
+        {isPending ? <LoaderCircle className="animate-spin" /> : <Mail />}
+        Send magic link
       </Button>
     </form>
   );

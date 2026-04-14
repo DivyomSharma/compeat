@@ -13,13 +13,7 @@ const emailSchema = z.object({
   next: z.string().optional(),
 });
 
-const verifySchema = z.object({
-  email: z.string().email(),
-  token: z.string().min(6, "Enter the 6-digit OTP code."),
-  next: z.string().optional(),
-});
-
-export async function requestOtpAction(
+export async function sendMagicLinkAction(
   _previousState: ActionState,
   formData: FormData
 ): Promise<ActionState> {
@@ -44,13 +38,14 @@ export async function requestOtpAction(
 
   const supabase = await createServerSupabaseClient();
   const headerStore = await headers();
-  const nextUrl = headerStore.get("origin") ?? getSiteUrl();
+  const origin = headerStore.get("origin") ?? getSiteUrl();
 
   const { error } = await supabase.auth.signInWithOtp({
     email: parsed.data.email,
     options: {
       shouldCreateUser: true,
-      emailRedirectTo: `${nextUrl}/auth/callback`,
+      // Magic link — Supabase sends a clickable link, NOT a 6-digit code
+      emailRedirectTo: `${origin}/auth/callback`,
     },
   });
 
@@ -61,56 +56,10 @@ export async function requestOtpAction(
     };
   }
 
-  const destination = new URLSearchParams({
-    email: parsed.data.email,
-  });
-
-  if (parsed.data.next) {
-    destination.set("next", parsed.data.next);
-  }
+  const destination = new URLSearchParams({ email: parsed.data.email });
+  if (parsed.data.next) destination.set("next", parsed.data.next);
 
   redirect(`/auth/verify?${destination.toString()}`);
-}
-
-export async function verifyOtpAction(
-  _previousState: ActionState,
-  formData: FormData
-): Promise<ActionState> {
-  const parsed = verifySchema.safeParse({
-    email: formData.get("email"),
-    token: formData.get("token"),
-    next: formData.get("next") || undefined,
-  });
-
-  if (!parsed.success) {
-    return {
-      success: false,
-      message: parsed.error.issues[0]?.message ?? "Enter a valid OTP code.",
-    };
-  }
-
-  if (!isSupabaseConfigured()) {
-    return {
-      success: false,
-      message: "Add your Supabase environment variables before using auth.",
-    };
-  }
-
-  const supabase = await createServerSupabaseClient();
-  const { error } = await supabase.auth.verifyOtp({
-    email: parsed.data.email,
-    token: parsed.data.token,
-    type: "email",
-  });
-
-  if (error) {
-    return {
-      success: false,
-      message: error.message,
-    };
-  }
-
-  redirect(parsed.data.next || "/dashboard");
 }
 
 export async function signOutAction() {
