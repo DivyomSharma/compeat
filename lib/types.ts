@@ -11,6 +11,9 @@ export type School = {
   state: string | null;
   country: string;
   description: string | null;
+  website?: string | null;
+  instagram?: string | null;
+  public_email?: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -23,6 +26,9 @@ export type AppUser = {
   display_name: string | null;
   headline: string | null;
   avatar_url: string | null;
+  website?: string | null;
+  instagram?: string | null;
+  public_email?: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -46,6 +52,9 @@ export type Club = {
   description: string | null;
   contact_email: string | null;
   logo_url: string | null;
+  website?: string | null;
+  instagram?: string | null;
+  public_email?: string | null;
   created_by: string;
   created_at: string;
   updated_at: string;

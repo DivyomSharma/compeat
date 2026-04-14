@@ -13,6 +13,7 @@ import {
 
 import { BrandMark } from "@/components/layout/brand-mark";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -29,11 +30,11 @@ const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/clubs", label: "Clubs", icon: Users2 },
   { href: "/events", label: "Events", icon: CalendarDays },
-  { href: "/events?scope=network", label: "Network", icon: Network },
 ];
 
 type SiteShellProps = {
   userName: string;
+  avatarUrl?: string | null;
   schoolName: string;
   roleLabel: string;
   actions?: React.ReactNode;
@@ -81,6 +82,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 
 export function SiteShell({
   userName,
+  avatarUrl,
   schoolName,
   roleLabel,
   actions,
@@ -91,7 +93,7 @@ export function SiteShell({
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-40 border-b-[3px] border-border bg-background/95 px-4 py-4 backdrop-blur md:px-6">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+        <div className="mx-auto flex max-w-[1600px] 2xl:max-w-none items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="md:hidden">
               <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
@@ -115,12 +117,23 @@ export function SiteShell({
                   <div className="space-y-6 p-5">
                     <NavLinks onNavigate={() => setMobileNavOpen(false)} />
                     <div className="neo-panel p-4">
-                      <div className="font-heading text-lg font-black uppercase">
-                        {userName}
+                      <div className="flex items-center gap-3">
+                        <Avatar className="size-10 border-2 border-border shadow-[2px_2px_0_0_var(--border)]">
+                          <AvatarImage src={avatarUrl || undefined} />
+                          <AvatarFallback className="font-heading font-black">{userName[0]}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-heading text-lg font-black uppercase">
+                            {userName}
+                          </div>
+                          <div className="mt-1 text-sm text-muted-foreground">
+                            {schoolName}
+                          </div>
+                        </div>
                       </div>
-                      <div className="mt-1 text-sm text-muted-foreground">
-                        {schoolName}
-                      </div>
+                      <Button asChild variant="outline" size="sm" className="mt-4 w-full" onClick={() => setMobileNavOpen(false)}>
+                        <Link href="/profile">Edit profile</Link>
+                      </Button>
                     </div>
                   </div>
                 </SheetContent>
@@ -141,17 +154,28 @@ export function SiteShell({
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 md:grid-cols-[280px_1fr] md:px-6">
+      <div className="mx-auto grid max-w-[1600px] 2xl:max-w-none gap-6 px-4 py-6 md:grid-cols-[280px_1fr] md:px-6">
         <aside className="hidden space-y-4 md:block">
           <div className="neo-card p-5">
-            <div className="inline-flex items-center gap-2 rounded-sm border-[3px] border-border bg-accent px-3 py-1 font-mono text-[11px] uppercase tracking-[0.2em] text-accent-foreground">
-              Campus shell
-            </div>
-            <div className="mt-4">
-              <div className="font-heading text-2xl font-black uppercase tracking-tight">
-                {userName}
+            <div className="flex items-center justify-between">
+              <div className="inline-flex items-center gap-2 rounded-sm border-[3px] border-border bg-accent px-3 py-1 font-mono text-[11px] uppercase tracking-[0.2em] text-accent-foreground">
+                Institution
               </div>
-              <div className="mt-2 text-sm text-muted-foreground">{schoolName}</div>
+              <Button asChild variant="link" size="sm" className="h-auto p-0">
+                <Link href="/profile">Edit</Link>
+              </Button>
+            </div>
+            <div className="mt-5 flex items-center gap-4">
+              <Avatar className="size-14 border-[3px] border-border shadow-[3px_3px_0_0_var(--border)]">
+                <AvatarImage src={avatarUrl || undefined} />
+                <AvatarFallback className="font-heading text-xl font-black">{userName[0]}</AvatarFallback>
+              </Avatar>
+              <div className="min-w-0">
+                <div className="font-heading text-xl font-black uppercase leading-none tracking-tight truncate">
+                  {userName}
+                </div>
+                <div className="mt-1.5 text-sm font-medium text-muted-foreground truncate">{schoolName}</div>
+              </div>
             </div>
           </div>
           <NavLinks />

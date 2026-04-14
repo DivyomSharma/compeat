@@ -9,6 +9,7 @@ import { getSiteUrl, isSupabaseConfigured } from "@/lib/config";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const emailSchema = z.object({
+  name: z.string().min(2, "Enter your full name."),
   email: z.string().email("Enter a valid institutional email address."),
   next: z.string().optional(),
 });
@@ -18,6 +19,7 @@ export async function sendMagicLinkAction(
   formData: FormData
 ): Promise<ActionState> {
   const parsed = emailSchema.safeParse({
+    name: formData.get("name"),
     email: formData.get("email"),
     next: formData.get("next") || undefined,
   });
@@ -25,7 +27,7 @@ export async function sendMagicLinkAction(
   if (!parsed.success) {
     return {
       success: false,
-      message: parsed.error.issues[0]?.message ?? "Enter a valid email.",
+      message: parsed.error.issues[0]?.message ?? "Enter a valid email and name.",
     };
   }
 
@@ -44,6 +46,9 @@ export async function sendMagicLinkAction(
     email: parsed.data.email,
     options: {
       shouldCreateUser: true,
+      data: {
+        full_name: parsed.data.name,
+      },
       // Magic link — Supabase sends a clickable link, NOT a 6-digit code
       emailRedirectTo: `${origin}/auth/callback`,
     },

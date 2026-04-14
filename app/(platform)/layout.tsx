@@ -14,6 +14,7 @@ export default async function PlatformLayout({
   return (
     <SiteShell
       userName={getDisplayName(viewer.profile, viewer.email)}
+      avatarUrl={viewer.profile?.avatar_url}
       schoolName={viewer.activeSchool?.name || "Campus workspace"}
       roleLabel={roleLabel}
       actions={

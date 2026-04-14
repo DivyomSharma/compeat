@@ -22,7 +22,7 @@ export default async function HomePage() {
     <div className="flex min-h-screen flex-col">
       {/* ── Header ── */}
       <header className="sticky top-0 z-30 border-b-[3px] border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+        <div className="mx-auto flex max-w-[1600px] 2xl:max-w-none items-center justify-between gap-4 px-4 py-4 sm:px-8">
           <BrandMark />
           <div className="flex items-center gap-3">
             <ThemeToggle />
@@ -33,7 +33,7 @@ export default async function HomePage() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-7xl flex-1 space-y-10 px-4 py-8 sm:px-6 pb-16">
+      <main className="mx-auto w-full max-w-[1600px] 2xl:max-w-none flex-1 space-y-10 px-4 py-8 sm:px-8 pb-16">
         {/* ── Hero ── */}
         <section className="neo-card overflow-hidden">
           <div className="grid gap-8 p-6 sm:p-8 xl:grid-cols-[1.2fr_1fr] xl:p-12">
@@ -45,8 +45,8 @@ export default async function HomePage() {
               </h1>
               <p className="mt-5 max-w-2xl text-base text-muted-foreground sm:text-lg">
                 Compeat by PlotArmour Studio helps institutions onboard as
-                tenants, clubs run daily workflows, and students discover events
-                across campuses without the drag of a generic ERP.
+                campuses, clubs run daily workflows, and students discover events
+                across the network without the drag of a generic ERP.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button asChild size="lg">
@@ -69,7 +69,7 @@ export default async function HomePage() {
                 </div>
                 <div className="mt-4 grid gap-3">
                   {[
-                    { label: "Tenant onboarding", icon: Building2 },
+                    { label: "Institution onboarding", icon: Building2 },
                     { label: "Club operations", icon: Users2 },
                     { label: "Event creation", icon: CalendarDays },
                     { label: "Inter-college network", icon: Network },
@@ -103,7 +103,7 @@ export default async function HomePage() {
             },
             {
               title: "Institution scale",
-              body: "Enforce tenant isolation while still exposing a public event network.",
+              body: "Enforce workspace isolation while still exposing a public event network.",
               icon: Building2,
             },
           ].map(({ title, body, icon: Icon }) => (
@@ -169,7 +169,7 @@ export default async function HomePage() {
 
       {/* ── Footer ── */}
       <footer className="border-t-[3px] border-border py-6">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="mx-auto max-w-[1600px] 2xl:max-w-none px-4 sm:px-8">
           <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
             Compeat · Powered by PlotArmour Studio
           </p>
