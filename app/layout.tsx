@@ -37,7 +37,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${spaceGrotesk.variable} ${spaceGroteskHeading.variable} ${ibmPlexMono.variable} h-full`}
     >
-      <body className="min-h-full">
+      <body className="min-h-full" suppressHydrationWarning>
         <AppProviders>{children}</AppProviders>
       </body>
     </html>
