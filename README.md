@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Compeat
 
-## Getting Started
+Compeat is a multi-tenant institutional platform for competitions, events, and inter-college collaboration. This MVP is built for high daily engagement across students, club leads, and campus admins.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 App Router
+- TypeScript
+- Tailwind CSS v4
+- shadcn/ui
+- Zustand
+- react-hook-form + zod
+- Supabase Auth, Postgres, RLS, and Storage
+
+## What ships in this MVP
+
+- Email + OTP authentication with Supabase
+- Tenant onboarding for schools and colleges
+- Club creation, member assignment, and scoped roles
+- Event creation with poster upload
+- Cross-campus event discovery
+- Student registration and organizer approvals
+- Basic PDF certificate generation to Supabase Storage
+
+## Local setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Copy the environment template and fill in your Supabase project values:
+
+```bash
+cp .env.example .env.local
+```
+
+Required variables:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `NEXT_PUBLIC_SITE_URL` (recommended locally as `http://localhost:3000`)
+
+3. In Supabase SQL editor, run:
+
+```sql
+-- paste contents of supabase/schema.sql
+```
+
+4. In Supabase Auth settings:
+
+- Enable email authentication
+- Enable OTP / magic link email flow
+- Set the site URL to your local or deployed app URL
+- Add `/auth/callback` as an allowed redirect path
+
+5. Start the app:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Database notes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The schema is in [supabase/schema.sql](/E:/Compeat/supabase/schema.sql).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Highlights:
 
-## Learn More
+- Every tenant-owned table includes `school_id`
+- UUID primary keys across the board
+- Foreign keys, timestamps, and targeted indexes
+- Explicit RLS policies for memberships, clubs, events, and registrations
+- Storage buckets for `event-assets` and `certificates`
 
-To learn more about Next.js, take a look at the following resources:
+## Product structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `app/` routes, layouts, and route handlers
+- `components/` shared UI, layout shell, and reusable primitives
+- `features/auth` OTP login
+- `features/onboarding` tenant onboarding
+- `features/clubs` club workflows
+- `features/events` event explorer, registrations, approvals, certificates
+- `lib/supabase` clients and server-side queries
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Important implementation choices
 
-## Deploy on Vercel
+- Server Components handle initial data fetching
+- Client Components are used only for interactivity and forms
+- Mutations are handled through Server Actions
+- Zustand powers client-side event explorer filters and app shell state
+- The landing page shows a public-style event preview while authenticated users get the full event workspace
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run typecheck
+```
+
+## Deployment notes
+
+- Vercel works out of the box once env vars are set
+- Supabase RLS is required for production isolation
+- The app assumes `SUPABASE_SERVICE_ROLE_KEY` is server-only and never exposed to the client
+
+## Node version
+
+Next.js 16 and parts of the lint toolchain are happiest on Node `20.19+`. The app was scaffolded on Node `20.17.0`, so upgrading Node is recommended before production deploys.
