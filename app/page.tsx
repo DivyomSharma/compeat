@@ -4,7 +4,6 @@ import {
   Building2,
   CalendarDays,
   Network,
-  ShieldCheck,
   Trophy,
   Users2,
 } from "lucide-react";
@@ -13,7 +12,6 @@ import { BrandMark } from "@/components/layout/brand-mark";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { isSupabaseConfigured } from "@/lib/config";
 import { getPublicEventFeed } from "@/lib/supabase/queries";
 import { formatDateOnly } from "@/lib/utils";
 
@@ -21,26 +19,31 @@ export default async function HomePage() {
   const featuredEvents = await getPublicEventFeed();
 
   return (
-    <div className="min-h-screen overflow-x-hidden">
-      <header className="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 md:px-6">
-        <BrandMark />
-        <div className="flex items-center gap-3">
-          <ThemeToggle />
-          <Button asChild>
-            <Link href="/auth/sign-in">Launch Compeat</Link>
-          </Button>
+    <div className="flex min-h-screen flex-col">
+      {/* ── Header ── */}
+      <header className="sticky top-0 z-30 border-b-[3px] border-border bg-background/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
+          <BrandMark />
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Button asChild>
+              <Link href="/auth/sign-in">Launch Compeat</Link>
+            </Button>
+          </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl space-y-8 px-4 pb-12 md:px-6">
+      <main className="mx-auto w-full max-w-7xl flex-1 space-y-10 px-4 py-8 sm:px-6 pb-16">
+        {/* ── Hero ── */}
         <section className="neo-card overflow-hidden">
-          <div className="grid gap-8 p-6 md:grid-cols-[1.4fr_0.8fr] md:p-10">
-            <div>
+          <div className="grid gap-8 p-6 sm:p-8 xl:grid-cols-[1.2fr_1fr] xl:p-12">
+            {/* Left */}
+            <div className="flex flex-col justify-center">
               <div className="neo-kicker">Competitions. Events. Campus network.</div>
-              <h1 className="neo-heading mt-5 max-w-4xl">
+              <h1 className="mt-5 font-heading text-4xl font-black uppercase leading-tight tracking-tight sm:text-5xl xl:text-6xl">
                 The campus platform built for high-frequency event culture.
               </h1>
-              <p className="mt-5 max-w-2xl text-base text-muted-foreground md:text-lg">
+              <p className="mt-5 max-w-2xl text-base text-muted-foreground sm:text-lg">
                 Compeat by PlotArmour Studio helps institutions onboard as
                 tenants, clubs run daily workflows, and students discover events
                 across campuses without the drag of a generic ERP.
@@ -58,7 +61,8 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="grid gap-4">
+            {/* Right */}
+            <div className="grid gap-4 content-start">
               <div className="neo-panel p-5">
                 <div className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
                   What ships in MVP
@@ -69,36 +73,23 @@ export default async function HomePage() {
                     { label: "Club operations", icon: Users2 },
                     { label: "Event creation", icon: CalendarDays },
                     { label: "Inter-college network", icon: Network },
-                  ].map(({ label, icon: Icon }) => {
-                    return (
-                      <div
-                        key={label}
-                        className="flex items-center gap-3 rounded-sm border-[3px] border-border bg-card px-4 py-3"
-                      >
-                        <Icon className="size-4" />
-                        <span className="font-semibold">{label}</span>
-                      </div>
-                    );
-                  })}
+                  ].map(({ label, icon: Icon }) => (
+                    <div
+                      key={label}
+                      className="flex items-center gap-3 rounded-sm border-[3px] border-border bg-card px-4 py-3"
+                    >
+                      <Icon className="size-4 shrink-0" />
+                      <span className="font-semibold">{label}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
-              {!isSupabaseConfigured() ? (
-                <div className="neo-panel bg-[var(--surface-yellow)] p-5 dark:text-black">
-                  <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em]">
-                    <ShieldCheck className="size-4" />
-                    Setup note
-                  </div>
-                  <p className="mt-3 text-sm">
-                    Add Supabase environment variables from `.env.example` to
-                    activate auth, data, storage, and RLS-backed flows.
-                  </p>
-                </div>
-              ) : null}
             </div>
           </div>
         </section>
 
-        <section className="grid gap-4 md:grid-cols-3">
+        {/* ── Features ── */}
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[
             {
               title: "Student velocity",
@@ -128,50 +119,62 @@ export default async function HomePage() {
           ))}
         </section>
 
-        <section className="space-y-4">
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                Inter-college feed
-              </p>
-              <h2 className="font-heading text-3xl font-black uppercase">
-                Live-ready public events
-              </h2>
+        {/* ── Public event feed ── */}
+        {featuredEvents.length > 0 && (
+          <section className="space-y-5">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                  Inter-college feed
+                </p>
+                <h2 className="font-heading text-3xl font-black uppercase">
+                  Live-ready public events
+                </h2>
+              </div>
+              <Button asChild variant="outline">
+                <Link href="/events">Browse all events</Link>
+              </Button>
             </div>
-            <Button asChild variant="outline">
-              <Link href="/events">Browse all events</Link>
-            </Button>
-          </div>
-          <div className="grid gap-4 lg:grid-cols-2">
-            {featuredEvents.slice(0, 4).map((event) => (
-              <article key={event.id} className="neo-card p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="mb-3 flex gap-2">
-                      <Badge>{event.category}</Badge>
-                      {event.allows_cross_school ? (
-                        <Badge variant="secondary">Cross-school open</Badge>
-                      ) : null}
+            <div className="grid gap-4 sm:grid-cols-2">
+              {featuredEvents.slice(0, 4).map((event) => (
+                <article key={event.id} className="neo-card p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="mb-3 flex flex-wrap gap-2">
+                        <Badge>{event.category}</Badge>
+                        {event.allows_cross_school ? (
+                          <Badge variant="secondary">Cross-school open</Badge>
+                        ) : null}
+                      </div>
+                      <h3 className="font-heading text-xl font-black uppercase leading-tight">
+                        {event.title}
+                      </h3>
                     </div>
-                    <h3 className="font-heading text-2xl font-black uppercase">
-                      {event.title}
-                    </h3>
+                    <div className="shrink-0 rounded-sm border-[3px] border-border bg-[var(--surface-yellow)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] dark:text-black">
+                      {formatDateOnly(event.starts_at)}
+                    </div>
                   </div>
-                  <div className="rounded-sm border-[3px] border-border bg-[var(--surface-yellow)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] dark:text-black">
-                    {formatDateOnly(event.starts_at)}
-                  </div>
-                </div>
-                <p className="mt-4 text-sm text-muted-foreground">
-                  {event.description}
-                </p>
-                <p className="mt-5 text-sm font-semibold">
-                  {event.schools?.name} · {event.venue}, {event.city}
-                </p>
-              </article>
-            ))}
-          </div>
-        </section>
+                  <p className="mt-4 line-clamp-2 text-sm text-muted-foreground">
+                    {event.description}
+                  </p>
+                  <p className="mt-5 text-sm font-semibold">
+                    {event.schools?.name} · {event.venue}, {event.city}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
+
+      {/* ── Footer ── */}
+      <footer className="border-t-[3px] border-border py-6">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            Compeat · Powered by PlotArmour Studio
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }

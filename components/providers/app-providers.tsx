@@ -3,10 +3,13 @@
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 
+import { NavigationLoader } from "@/components/layout/navigation-loader";
+
 export function AppProviders({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       {children}
+      <NavigationLoader />
       <Toaster
         richColors
         position="top-right"
