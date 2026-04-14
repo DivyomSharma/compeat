@@ -5,6 +5,7 @@ import { StatCard } from "@/components/shared/stat-card";
 import { RegistrationReviewTable } from "@/features/events/components/registration-review-table";
 import { requireActiveSchool } from "@/lib/auth";
 import { getEventManagementDetails } from "@/lib/supabase/queries";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export default async function EventManagePage({
   params,
@@ -13,7 +14,10 @@ export default async function EventManagePage({
 }) {
   const { eventId } = await params;
   const viewer = await requireActiveSchool();
-  const { event, registrations, stats } = await getEventManagementDetails(eventId);
+  const [{ event, registrations, stats }, supabase] = await Promise.all([
+    getEventManagementDetails(eventId),
+    createServerSupabaseClient(),
+  ]);
 
   if (!event) {
     notFound();
@@ -24,6 +28,25 @@ export default async function EventManagePage({
     event.organizer_id !== viewer.authUserId
   ) {
     notFound();
+  }
+
+  // Build a schoolId → name lookup so the table shows real school names
+  const participantSchoolIds = [
+    ...new Set(
+      registrations
+        .map((r) => r.participant_school_id)
+        .filter((id): id is string => Boolean(id))
+    ),
+  ];
+  let schoolNames: Record<string, string> = {};
+  if (participantSchoolIds.length) {
+    const { data: schools } = await supabase
+      .from("schools")
+      .select("id, name")
+      .in("id", participantSchoolIds);
+    schoolNames = Object.fromEntries(
+      (schools ?? []).map((s) => [s.id, s.name])
+    );
   }
 
   return (
@@ -59,7 +82,11 @@ export default async function EventManagePage({
         <h2 className="font-heading text-2xl font-black uppercase">
           Registrations
         </h2>
-        <RegistrationReviewTable eventId={event.id} registrations={registrations} />
+        <RegistrationReviewTable
+          eventId={event.id}
+          registrations={registrations}
+          schoolNames={schoolNames}
+        />
       </section>
     </div>
   );

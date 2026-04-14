@@ -12,9 +12,11 @@ import { formatRoleLabel } from "@/lib/utils";
 export function RegistrationReviewTable({
   eventId,
   registrations,
+  schoolNames = {},
 }: {
   eventId: string;
   registrations: Registration[];
+  schoolNames?: Record<string, string>;
 }) {
   if (!registrations.length) {
     return (
@@ -69,7 +71,9 @@ export function RegistrationReviewTable({
                 </div>
               </td>
               <td className="px-4 py-4 text-sm text-muted-foreground">
-                {registration.participant_school_id || "External"}
+                {registration.participant_school_id
+                  ? (schoolNames[registration.participant_school_id] ?? "Other campus")
+                  : "External"}
               </td>
               <td className="px-4 py-4 text-sm text-muted-foreground">
                 {registration.notes || "No note"}

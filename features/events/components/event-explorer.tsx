@@ -105,62 +105,75 @@ export function EventExplorer({
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        {visibleEvents.map((event) => (
-          <article key={event.id} className="neo-card p-5">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <div className="mb-3 flex flex-wrap gap-2">
-                  <Badge>{event.category}</Badge>
-                  <Badge variant="outline">{event.visibility}</Badge>
-                  {event.allows_cross_school ? (
-                    <Badge variant="secondary">
-                      <Sparkles className="size-3" />
-                      Open network
-                    </Badge>
-                  ) : null}
+        {visibleEvents.length ? (
+          visibleEvents.map((event) => (
+            <article key={event.id} className="neo-card p-5">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    <Badge>{event.category}</Badge>
+                    <Badge variant="outline">{event.visibility}</Badge>
+                    {event.allows_cross_school ? (
+                      <Badge variant="secondary">
+                        <Sparkles className="size-3" />
+                        Open network
+                      </Badge>
+                    ) : null}
+                  </div>
+                  <h3 className="font-heading text-2xl font-black uppercase tracking-tight">
+                    {event.title}
+                  </h3>
                 </div>
-                <h3 className="font-heading text-2xl font-black uppercase tracking-tight">
-                  {event.title}
-                </h3>
+                <div className="rounded-sm border-[3px] border-border bg-[var(--surface-yellow)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] dark:text-black">
+                  {formatDateOnly(event.starts_at)}
+                </div>
               </div>
-              <div className="rounded-sm border-[3px] border-border bg-[var(--surface-yellow)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] dark:text-black">
-                {formatDateOnly(event.starts_at)}
-              </div>
-            </div>
 
-            <p className="mt-4 text-sm text-muted-foreground">{event.description}</p>
+              <p className="mt-4 text-sm text-muted-foreground">{event.description}</p>
 
-            <div className="mt-5 grid gap-3 text-sm md:grid-cols-2">
-              <div className="flex items-center gap-2">
-                <School2 className="size-4" />
-                <span>{event.schools?.name || "Campus event"}</span>
+              <div className="mt-5 grid gap-3 text-sm md:grid-cols-2">
+                <div className="flex items-center gap-2">
+                  <School2 className="size-4" />
+                  <span>{event.schools?.name || "Campus event"}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="size-4" />
+                  <span>
+                    {event.venue}, {event.city}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CalendarDays className="size-4" />
+                  <span>Deadline {formatDateOnly(event.registration_deadline)}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Users className="size-4" />
+                  <span>
+                    {event.capacity ? `${event.capacity} seats` : "Open capacity"}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="size-4" />
-                <span>
-                  {event.venue}, {event.city}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CalendarDays className="size-4" />
-                <span>Deadline {formatDateOnly(event.registration_deadline)}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="size-4" />
-                <span>
-                  {event.capacity ? `${event.capacity} seats` : "Open capacity"}
-                </span>
-              </div>
-            </div>
 
-            <div className="mt-6">
-              <Button asChild className="w-full md:w-auto">
-                <Link href={`/events/${event.id}`}>View event</Link>
-              </Button>
+              <div className="mt-6">
+                <Button asChild className="w-full md:w-auto">
+                  <Link href={`/events/${event.id}`}>View event</Link>
+                </Button>
+              </div>
+            </article>
+          ))
+        ) : (
+          <div className="neo-card col-span-2 flex flex-col items-center gap-4 p-10 text-center">
+            <CalendarDays className="size-10 text-muted-foreground" />
+            <div>
+              <h3 className="font-heading text-2xl font-black uppercase">No events found</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Try a different filter, category, or city to explore more events.
+              </p>
             </div>
-          </article>
-        ))}
+          </div>
+        )}
       </div>
     </div>
   );
 }
+

@@ -544,6 +544,18 @@ on storage.objects
 for select
 using (bucket_id = 'event-assets');
 
+create policy "event_assets_authenticated_upload"
+on storage.objects
+for insert
+to authenticated
+with check (bucket_id = 'event-assets');
+
+create policy "event_assets_owner_delete"
+on storage.objects
+for delete
+to authenticated
+using (bucket_id = 'event-assets' and auth.uid()::text = owner);
+
 create policy "certificates_owner_read"
 on storage.objects
 for select
