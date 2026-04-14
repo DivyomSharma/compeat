@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { CalendarDays, MapPin, School2, Sparkles, Users } from "lucide-react";
-import { useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,17 @@ export function EventExplorer({
 }) {
   const { category, city, scope, setCategory, setCity, setScope } =
     useEventFilterStore();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const urlScope = searchParams.get("scope");
+
+  useEffect(() => {
+    if (urlScope === "network" && scope !== "network") {
+      setScope("network");
+    } else if (!urlScope && scope === "network") {
+      setScope("all");
+    }
+  }, [urlScope, scope, setScope]);
 
   const visibleEvents = useMemo(() => {
     const source =
@@ -63,7 +75,17 @@ export function EventExplorer({
             <label className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
               Scope
             </label>
-            <Select value={scope} onValueChange={(value) => setScope(value as typeof scope)}>
+            <Select 
+              value={scope} 
+              onValueChange={(value) => {
+                setScope(value as typeof scope);
+                if (value === "network") {
+                  router.push("/events?scope=network", { scroll: false });
+                } else {
+                  router.push("/events", { scroll: false });
+                }
+              }}
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>

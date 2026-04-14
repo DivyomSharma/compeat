@@ -2,13 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle, Plus } from "lucide-react";
-import { useActionState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { FormMessage } from "@/components/shared/form-message";
 import { Button } from "@/components/ui/button";
-import { initialActionState } from "@/lib/action-state";
 import {
   Dialog,
   DialogContent,
@@ -52,7 +52,8 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export function CreateEventDialog({ clubs }: { clubs: Club[] }) {
-  const [state, formAction] = useActionState(createEventAction, initialActionState);
+  const [open, setOpen] = useState(false);
+  const [errorText, setErrorText] = useState("");
   const [isPending, startTransition] = useTransition();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -96,11 +97,22 @@ export function CreateEventDialog({ clubs }: { clubs: Club[] }) {
       data.set("poster", file);
     }
 
-    startTransition(() => formAction(data));
+    startTransition(async () => {
+      setErrorText("");
+      const result = await createEventAction({ success: false, message: "" }, data);
+      
+      if (result.success) {
+        form.reset();
+        setOpen(false);
+        toast.success(result.message);
+      } else {
+        setErrorText(result.message);
+      }
+    });
   });
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="secondary">
           <Plus />
@@ -237,7 +249,7 @@ export function CreateEventDialog({ clubs }: { clubs: Club[] }) {
             Allow registrations from other institutions
           </label>
 
-          <FormMessage message={state.message} success={state.success} />
+          <FormMessage message={errorText} success={false} />
 
           <Button type="submit" className="w-full" disabled={isPending}>
             {isPending ? <LoaderCircle className="animate-spin" /> : <Plus />}
