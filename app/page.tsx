@@ -21,7 +21,7 @@ export default async function HomePage() {
   const featuredEvents = await getPublicEventFeed();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       <header className="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 md:px-6">
         <BrandMark />
         <div className="flex items-center gap-3">
@@ -48,7 +48,7 @@ export default async function HomePage() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button asChild size="lg">
                   <Link href="/auth/sign-in">
-                    Start with OTP
+                    Sign in free
                     <ArrowRight />
                   </Link>
                 </Button>
